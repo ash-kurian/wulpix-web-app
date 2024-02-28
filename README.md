@@ -1,2 +1,3 @@
-# devops-101-tryouts
-An end to end containerised web application deployment in kubernetes kind cluster
+# wulpix-web-app
+
+A sample web application created to test out end to end deployment in kubernetes kind cluster.
