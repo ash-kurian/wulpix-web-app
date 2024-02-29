@@ -5,6 +5,7 @@ A sample web application created to test out end to end deployment in kubernetes
 ## Tech Stack
 
 - Programming Languages: python, html, css
+- Containerisation: Docker
 - CI/CD: GitHub Actions
 - Container Registry: DockerHub
 
@@ -16,7 +17,7 @@ The following docker command will configure the app in your localhost.
 docker run -d --name <CONAINER_NAME> -p <LOCAL_PORT>:8000 asheranilkurian/wulpix:<IMAGE_TAG>
 ```
 
-Latest IMAGE_TAG: 9443c4a
+Latest IMAGE_TAG: 7f5f445
 
 Replace:-
 
