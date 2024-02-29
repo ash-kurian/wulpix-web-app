@@ -17,7 +17,7 @@ The following docker command will configure the app in your localhost.
 docker run -d --name <CONAINER_NAME> -p <LOCAL_PORT>:8000 asheranilkurian/wulpix:<IMAGE_TAG>
 ```
 
-Latest IMAGE_TAG: 7f5f445
+Latest IMAGE_TAG: 1492e3f
 
 Replace:-
 
