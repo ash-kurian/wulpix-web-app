@@ -3,6 +3,8 @@ name: Build and push wulpix docker image to DockerHub
 on:
   push:
     branches: ["main"]
+    paths-ignore:
+    - './README.md'
 
 jobs:
   build:
