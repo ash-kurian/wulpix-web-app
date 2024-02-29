@@ -25,18 +25,11 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Get short commit SHA
       id: git_sha
-      run: echo "name=sha::$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-    # - name: Build Docker image
-    #   id: docker_build
-    #   run: docker build . --file Dockerfile --tag asheranilkurian/wulpix:v${{ steps.git_sha.outputs.sha }}
-    # - name: Push Docker image to Docker Hub
-    #   run: |
-    #     echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
-    #     docker push asheranilkurian/wulpix:v${{ steps.git_sha.outputs.sha }}
+      run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
         context: .
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: asheranilkurian/wulpix:v${{ steps.git_sha.outputs.sha }}
+        tags: asheranilkurian/wulpix:${{ steps.git_sha.outputs.sha }}
