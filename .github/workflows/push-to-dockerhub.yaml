@@ -12,46 +12,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     - name: Log in to Docker Hub
-      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      uses: docker/login-action@v3
       with:
+        registry: docker.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    # - name: Get the latest tag from Docker Hub
-    #   id: get_tag
-    #   run: |
-    #     if docker pull asheranilkurian/wulpix:latest --quiet && docker inspect --format='{{ index .RepoDigests 0}}' asheranilkurian/wulpix:latest | grep -qE '.*@.*'; then
-    #       echo "::set-output name=tag::$(docker inspect --format='{{ index .RepoDigests 0}}' asheranilkurian/wulpix:latest | sed 's/^.*@//')"
-    #     else
-    #       echo "::set-output name=tag::v1"
-    #     fi
-    # - name: Increment version
-    #   id: increment_version
-    #   run: echo "::set-output name=version::$(echo "${{ steps.get_tag.outputs.tag }}" | sed 's/v//')"
     - name: Get short commit SHA
       id: git_sha
-      run: echo "::set-output name=sha::$(git rev-parse --short HEAD)"
-    - name: Build Docker image
-      id: docker_build
-      run: docker build . --file Dockerfile --tag asheranilkurian/wulpix:v${{ steps.git_sha.outputs.sha }}
-    - name: Push Docker image to Docker Hub
-      run: |
-        echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
-        docker push asheranilkurian/wulpix:v${{ steps.git_sha.outputs.sha }}
-    # - name: Extract metadata (tags, labels) for Docker
-    #   id: meta
-    #   uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-    #   with:
-    #     images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-    # - name: Build and push Docker image
-    #   uses: docker/build-push-action@v2
-    #   with:
-    #     context: "{{defaultContext}}"
-    #     push: true
-    #     tags: ${{ steps.meta.outputs.tags }}
-    #     labels: ${{ steps.meta.outputs.labels }}
+      run: echo "name=sha::$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+    # - name: Build Docker image
+    #   id: docker_build
+    #   run: docker build . --file Dockerfile --tag asheranilkurian/wulpix:v${{ steps.git_sha.outputs.sha }}
+    # - name: Push Docker image to Docker Hub
+    #   run: |
+    #     echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
+    #     docker push asheranilkurian/wulpix:v${{ steps.git_sha.outputs.sha }}
+    - name: Build and push
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: asheranilkurian/wulpix:v${{ steps.git_sha.outputs.sha }}
